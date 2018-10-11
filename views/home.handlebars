@@ -1,0 +1,56 @@
+<div class="container">
+    <div class="row">
+        <h1>REGISTRATION NUMBERS</h1>
+    </div>
+    <div class="row">
+        <div class="alert">
+        </div>
+    </div>
+    <div class="row">
+        <form action="/reg_numbers" method="POST">
+
+            <div class="col-md-4">
+                <div class="input-group  mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-lg">REGISTRATION</span>
+                    </div>
+                    <input type="text" class="form-control registrType" name="textBox" placeholder="Enter a valid registration"
+                        aria-label="Large" aria-describedby="inputGroup-sizing-sm">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <button class="btn btn-primary add-btn" type="submit"><strong>Add</strong></button>
+            </div>
+        </form>
+
+        <div class="col-md-6">
+            <button class="btn btn-primary resetBtn" type="submit"><strong>Reset</strong></button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class "col-md-4 fourRadios">
+            <select class="custom-select mr-sm-2 town-dropdown" name="">
+                <option value="ALL">ALL</option>
+                <option value="CA">CAPE TOWN</option>
+                <option value="CJ">PAARL</option>
+                <option value="CY">BELLVILLE</option>
+                <option value="CF">KRAAIFONTAIN</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="display-area col-md-2">
+                <!-- regList displays here -->
+                <h2><span>{{registrationNo}}</span></h2>
+            </ul>
+        </div>
+        {{#if messages.info}}
+        <div class="entry">
+            <h1> {{messages.info}}</h1>
+        </div>
+        {{/if}}
+    </div>
+</div>
