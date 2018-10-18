@@ -1,53 +1,93 @@
-//import modules
 const express = require('express');
 const exphbs = require('express-handlebars');
 const flash = require('express-flash');
 const session = require('express-session');
 const bodyParser = require('body-parser');
-const registration_number = require('./registration_number.js');
+const pg = require("pg");
+let registration = require('./registration_number.js');
 const app = express();
+const Pool = pg.Pool;
 
-const registrationInstance = registration_number();
+// should we use a SSL connection
+let useSSL = false;
+let local = process.env.LOCAL || false;
+if (process.env.DATABASE_URL && !local) {
+    useSSL = true;
+}
+// which db connection to use
+const connectionString = process.env.DATABASE_URL || 'postgres://coder:pg123@localhost:5432/towns';
 
-app.use(express.static('public'))
+const pool = new Pool({
+    connectionString,
+    ssl: useSSL
+});
+//factory function instance
+let registrationInstance = registration(pool)
+// configuring handlebars as middleware
+app.use(bodyParser.urlencoded({
+    extended: false
+}))
 app.set('view engine', 'handlebars')
 app.engine('handlebars', exphbs({
     defaultLayout: 'main'
-}));
-app.use(bodyParser.urlencoded({
-    extended: false
-}));
-// initialise session middleware - flash-express depends on it
+}))
+// initialise session middleware in which flash-express depends on it
 app.use(session({
-    secret: "<add a secret string here>",
+    secret: '<this is my long string that is used for session in http>',
     resave: false,
     saveUninitialized: true
 }));
 
 // initialise the flash middleware
 app.use(flash());
+// built-in static middleware from ExpressJS to use static resources 
+app.use(express.static('public'))
 
-app.get('/', async function (req, res, next) {
-
-    res.render('home', {
-        registrationNo: await registrationInstance.addRegistration()
-    });
-});
-
-app.post('/reg_numbers:textBox', async function (req, res, next) {
+// My default Get route
+app.get('/', function (req, res, next) {
     try {
-        let registration = req.body.textBox
-        if (registration === "" || registration !== 'CA' || registration !== 'CY' || registration !== 'CJ' || registration !== 'CF') {
-
-            req.flash('info', 'Please enter a valid registration!')
-        }
-        s
-        res.redirect('/')
+        res.render('home')
     } catch (error) {
         next(error);
+    } finally {
+        console.log('finally')
     }
 });
 
+//post route
+app.post('/addPlate', async function (req, res, next) {
+    try {
+        let addedPlate = req.body.textBox
+        let allReg = await registrationInstance.allTowns()
+        let registration = await registrationInstance.addRegistration(addedPlate);
+
+        res.render('home', {
+            registration,
+            allReg
+
+        })
+
+    } catch (error) {
+        next(error);
+    } finally {
+        console.log('finally');
+    }
+
+});
+app.get('/filters/:towns', async function (req, res, next) {
+    try {
+        let tags = req.params.towns
+        let filredReg = await registrationInstance.filterBy(tags);
+        res.render('home', {
+            filredReg
+        })
+
+    } catch (error) {
+        next(error);
+    } finally {
+        console.log('finally');
+    }
+});
 
 const PORT = process.env.PORT || 3011
 

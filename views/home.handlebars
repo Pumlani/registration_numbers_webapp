@@ -7,7 +7,7 @@
         </div>
     </div>
     <div class="row">
-        <form action="/reg_numbers" method="POST">
+        <form action="/addPlate" method="POST">
 
             <div class="col-md-4">
                 <div class="input-group  mb-3">
@@ -30,7 +30,7 @@
 
     <div class="row">
         <div class "col-md-4 fourRadios">
-            <select class="custom-select mr-sm-2 town-dropdown" name="">
+            <select class="custom-select mr-sm-2 town-dropdown" id='dropDown' name="" onclick="myTowns">
                 <option value="ALL">ALL</option>
                 <option value="CA">CAPE TOWN</option>
                 <option value="CJ">PAARL</option>
@@ -44,7 +44,9 @@
         <div class="col-md-12">
             <ul class="display-area col-md-2">
                 <!-- regList displays here -->
-                <h2><span>{{registrationNo}}</span></h2>
+                {{#each allReg}}
+                <h2><span>{{this.registration}}</span></h2>
+                {{/each}}
             </ul>
         </div>
         {{#if messages.info}}
@@ -53,4 +55,11 @@
         </div>
         {{/if}}
     </div>
+
 </div>
+<script>
+    var myTowns = function () {
+        var town = document.getElementById('#dropDown');
+        location.href = '/filters/' + town.value;
+    }
+</script>

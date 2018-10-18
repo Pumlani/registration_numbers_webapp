@@ -1,42 +1,39 @@
 
 module.exports = function (pool) {
   'use strict'
+  async function addRegistration(reg) {
 
-  async function addRegistration(registNo) {
-    // making the first letteer upper case
-    // registNo = registNo.charAt(0).toUpperCase() + registNo.slice(1).toLowerCase();
-
-    let plateResult = await pool.query('SELECT id FROM registration_numbers WHERE registration=$1', [registNo.rows[0].id]);
-    console.log(plateResult)
-
-    let townResult = await pool.query('SELECT id FROM towns WHERE town=$1', [registNo]);
-    if (townResult.rowCount === 0) {
-
-      await pool.query('INSERT into registraion_numbers (town, tag) values ($1, $2)', [registNo]);
+    let registNo = reg.substr(0, 3).trim();
+    // console.log(registNo)
+    let plateResult = await pool.query('SELECT id FROM towns WHERE towns.tag=$1', [registNo]);
+    if (plateResult.rowCount > 0) {
+      await pool.query('insert into registration_numbers (registration, town_id) values ($1,$2)', [reg, plateResult.rows[0].id])
     }
+    // console.log(plateResult);
+  }
+  async function allTowns() {
+    let result = await pool.query('SELECT registration FROM registration_numbers')
+    return result.rows
   }
 
-
-  // creating an array to push string of the entered tags only
   async function filterBy(tag) {
-    let filtered = [];
-    let registrations = Object.keys(regList);
-    if (tag === "ALL") {
-      return registrations;
-    }
-    //looping on my strings after they converted
-    for (var i = 0; i < registrations.length; i++) {
+    // let filtered = [];
 
-      if (registrations[i].startsWith(tag)) {
-        filtered.push(registrations[i]);
-      }
+    let registrations = await pool.query('SELECT registration FROM registration_numbers');
+    if (tag === "ALL") {
+      return registrations.rows;
     }
-    return filtered;
+    let registNo = reg.substr(0, 3).trim();
+    let filter = await pool.query('SELECT id FROM towns WHERE town.tag=$1', [registNo]);
+
+    let filtered = await pool.query('SELECT registration FROM registration_numbers WHERE town_id=$1', [filter.rows[0].id]);
+    Console.log(filtered);
+    return filtered.rows;
   }
 
   return {
     addRegistration,
-    filterBy
+    filterBy,
+    allTowns
   }
-
 }
