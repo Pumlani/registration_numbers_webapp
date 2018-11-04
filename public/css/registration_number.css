@@ -5,7 +5,7 @@ ul{
   padding: 1em;
 }
 
-.regNum{
+#display{
   text-align: center;
   padding: 0.6em 1em;
   background-color: yellow;

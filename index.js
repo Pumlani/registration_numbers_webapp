@@ -44,9 +44,16 @@ app.use(flash());
 app.use(express.static('public'))
 
 // My default Get route
-app.get('/', function (req, res, next) {
+app.get('/', async function (req, res, next) {
     try {
-        res.render('home')
+        // get all the reg numbers from the db
+        let allReg = await registrationInstance.allTowns();
+
+
+
+        res.render('home', {
+            allReg
+        });
     } catch (error) {
         next(error);
     } finally {
@@ -55,17 +62,25 @@ app.get('/', function (req, res, next) {
 });
 
 //post route
+app.post('/clear', async function (req, res, next) {
+    try {
+        // let cleanTable = await pool.query('delete from registration_nubmers');
+        // let clear = cleanTable.rows;
+        await registrationInstance.clearRegistration();
+        res.redirect('/');
+
+    } catch (error) {
+        next(error);
+    }
+});
 app.post('/addPlate', async function (req, res, next) {
     try {
+        //take registration number from the client side
         let addedPlate = req.body.textBox
-        let allReg = await registrationInstance.allTowns()
-        let registration = await registrationInstance.addRegistration(addedPlate);
+        await registrationInstance.addRegistration(addedPlate);
+        // await registrationInstance.filterBy(addedPlate);
 
-        res.render('home', {
-            registration,
-            allReg
-
-        })
+        res.redirect('/');
 
     } catch (error) {
         next(error);
@@ -74,22 +89,22 @@ app.post('/addPlate', async function (req, res, next) {
     }
 
 });
-app.get('/filters/:towns', async function (req, res, next) {
-    try {
-        let tags = req.params.towns
-        let filredReg = await registrationInstance.filterBy(tags);
-        res.render('home', {
-            filredReg
-        })
+// app.get('/filters/:towns', async function (req, res, next) {
+//     try {
+//         let tags = req.params.towns
+//         let filredReg = await registrationInstance.filterBy(tags);
+//         res.render('home', {
+//             filredReg
+//         })
 
-    } catch (error) {
-        next(error);
-    } finally {
-        console.log('finally');
-    }
-});
+//     } catch (error) {
+//         next(error);
+//     } finally {
+//         console.log('finally');
+//     }
+// });
 
-const PORT = process.env.PORT || 3011
+const PORT = process.env.PORT || 3001
 
 app.listen(PORT, function () {
     console.log("App started at port:", PORT);
