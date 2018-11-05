@@ -48,11 +48,10 @@ app.get('/', async function (req, res, next) {
     try {
         // get all the reg numbers from the db
         let allReg = await registrationInstance.allTowns();
-
-
-
+        let allTowns = await registrationInstance.eachTowns();
         res.render('home', {
-            allReg
+            allReg,
+            allTowns
         });
     } catch (error) {
         next(error);
@@ -75,13 +74,19 @@ app.post('/clear', async function (req, res, next) {
 });
 app.post('/addPlate', async function (req, res, next) {
     try {
+        let addedTown = req.body.plate;
+        res.redirect('/addPlate/' + addedTown);
+
+    } catch (error) {
+        next(error);
+    }
+});
+app.post('/addPlate', async function (req, res, next) {
+    try {
         //take registration number from the client side
-        let addedPlate = req.body.textBox
-        await registrationInstance.addRegistration(addedPlate);
-        // await registrationInstance.filterBy(addedPlate);
-
+        // let addedPlate = req.body.textBox
+        await registrationInstance.allTowns(addedPlate);
         res.redirect('/');
-
     } catch (error) {
         next(error);
     } finally {
@@ -89,20 +94,27 @@ app.post('/addPlate', async function (req, res, next) {
     }
 
 });
-// app.get('/filters/:towns', async function (req, res, next) {
-//     try {
-//         let tags = req.params.towns
-//         let filredReg = await registrationInstance.filterBy(tags);
-//         res.render('home', {
-//             filredReg
-//         })
 
-//     } catch (error) {
-//         next(error);
-//     } finally {
-//         console.log('finally');
-//     }
-// });
+
+
+app.get('/filters/:towns', async function (req, res, next) {
+    try {
+        let tags = req.params.towns
+        let filredReg = await registrationInstance.filterBy(tags);
+        let allTowns = await registrationInstance.eachTowns();
+        res.render('home', {
+            filredReg,
+            allTowns
+
+
+        })
+
+    } catch (error) {
+        next(error);
+    } finally {
+        console.log('finally');
+    }
+});
 
 const PORT = process.env.PORT || 3001
 

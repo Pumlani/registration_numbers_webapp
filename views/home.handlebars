@@ -37,12 +37,11 @@
 
     <div class="row">
         <div class "col-md-4 fourRadios">
-            <select class="custom-select mr-sm-2 town-dropdown" id='dropDown' name="" onclick="myTowns">
+            <select class="custom-select mr-sm-2 town-dropdown" id='dropDown' name="plate" onclick="myTowns()">
                 <option value="ALL">ALL</option>
-                <option value="CA">CAPE TOWN</option>
-                <option value="CJ">PAARL</option>
-                <option value="CY">BELLVILLE</option>
-                <option value="CF">KRAAIFONTAIN</option>
+                {{#each allTowns}}
+                <option value="{{tag}}">{{town}}</option>
+                {{/each}}
             </select>
         </div>
     </div>
@@ -51,7 +50,7 @@
         <div class="col-md-12">
             <ul class="display-area col-md-2">
                 <!-- regList displays here -->
-                {{#each allReg}}
+                {{#each filredReg}}
                 <h2><span>{{this.registration}}</span></h2>
                 {{/each}}
             </ul>
@@ -64,9 +63,9 @@
     </div>
 
 </div>
-<script>
-    var myTowns = function () {
-        var town = document.getElementById('#dropDown');
+<script type="text/javascript">
+    function myTowns() {
+        var town = document.querySelector('.town-dropdown');
         location.href = '/filters/' + town.value;
     }
 </script>
