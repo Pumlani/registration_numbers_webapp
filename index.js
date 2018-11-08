@@ -48,7 +48,9 @@ app.get('/', async function (req, res, next) {
     try {
         // get all the reg numbers from the db
         let allReg = await registrationInstance.allTowns();
+        console.log(allReg);
         let allTowns = await registrationInstance.eachTowns();
+        console.log(allTowns);
         res.render('home', {
             allReg,
             allTowns
@@ -72,30 +74,27 @@ app.post('/clear', async function (req, res, next) {
         next(error);
     }
 });
-app.post('/addPlate', async function (req, res, next) {
-    try {
-        let addedTown = req.body.plate;
-        res.redirect('/addPlate/' + addedTown);
+// app.post('/addPlate', async function (req, res, next) {
+//     try {
+//         let addedTown = req.body.plate;
+//         res.redirect('/addPlate/' + addedTown);
 
-    } catch (error) {
-        next(error);
-    }
-});
+//     } catch (error) {
+//         next(error);
+//     }
+// });
 app.post('/addPlate', async function (req, res, next) {
     try {
         //take registration number from the client side
-        // let addedPlate = req.body.textBox
-        await registrationInstance.allTowns(addedPlate);
+        let addedPlate = req.body.textBox
+        await registrationInstance.addRegistration(addedPlate);
         res.redirect('/');
     } catch (error) {
         next(error);
     } finally {
         console.log('finally');
     }
-
 });
-
-
 
 app.get('/filters/:towns', async function (req, res, next) {
     try {
@@ -105,9 +104,7 @@ app.get('/filters/:towns', async function (req, res, next) {
         res.render('home', {
             filredReg,
             allTowns
-
-
-        })
+        });
 
     } catch (error) {
         next(error);

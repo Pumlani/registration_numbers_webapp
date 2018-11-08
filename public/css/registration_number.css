@@ -1,11 +1,12 @@
-ul{
+ul {
   list-style: none;
 }
+
 .row {
   padding: 1em;
 }
 
-#display{
+#display {
   text-align: center;
   padding: 0.6em 1em;
   background-color: yellow;
@@ -14,9 +15,12 @@ ul{
   border-radius: 6px;
 }
 
+#inputGroup-sizing-lg {}
+
 .alert {
   display: none;
 }
-.registrType{
-  width:50%;
+
+.registrType {
+  width: 50%;
 }
