@@ -1,18 +1,38 @@
 module.exports = function (pool) {
   'use strict'
   async function addRegistration(reg) {
-
     let registNo = reg.substr(0, 3).trim();
-    console.log(registNo)
-    let plateResult = await pool.query('SELECT id FROM towns WHERE tag=$1', [registNo]);
-    console.log(plateResult.rows[0].id);
-    console.log(plateResult.rowCount);
-    let plate = await pool.query('SELECT * FROM registration_numbers WHERE registration=$1', [reg]);
-    if (plate.rowCount === 0) {
-      // console.log(plateResult.rows[0].id);
+    // console.log(registNo)
+    let exist = await doesExist(reg)
+    if (!exist) {
+      let message = validate(reg)
+      if (!message) {
+        return message
+      } else {
+        let plateResult = await pool.query('SELECT id FROM towns WHERE tag=$1', [registNo]);
+        let plate = await pool.query('SELECT * FROM registration_numbers WHERE registration=$1', [registNo]);
+        if (plate.rowCount === 0) {
+          let result = await pool.query('insert into registration_numbers (registration, town_id) values ($1,$2)', [reg, plateResult.rows[0].id])
+        }
+      }
 
-      let result = await pool.query('insert into registration_numbers (registration, town_id) values ($1,$2)', [reg, plateResult.rows[0].id])
-      console.log(result);
+    } else {
+      return 'does exist'
+    }
+  }
+
+  async function doesExist(reg) {
+    let result = await pool.query('select * from registration_numbers where registration=$1', [reg]);
+    if (result.rowCount === 0) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  async function validate(plate) {
+    if (plate.length >= 8) {
+      return "too long"
     }
   }
 
@@ -48,6 +68,7 @@ module.exports = function (pool) {
     filterBy,
     allTowns,
     clearRegistration,
-    eachTowns
+    eachTowns,
+    validate
   }
 }

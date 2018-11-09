@@ -65,30 +65,20 @@ app.get('/', async function (req, res, next) {
 //post route
 app.post('/clear', async function (req, res, next) {
     try {
-        // let cleanTable = await pool.query('delete from registration_nubmers');
-        // let clear = cleanTable.rows;
         await registrationInstance.clearRegistration();
         res.redirect('/');
-
     } catch (error) {
         next(error);
     }
 });
-// app.post('/addPlate', async function (req, res, next) {
-//     try {
-//         let addedTown = req.body.plate;
-//         res.redirect('/addPlate/' + addedTown);
-
-//     } catch (error) {
-//         next(error);
-//     }
-// });
 app.post('/addPlate', async function (req, res, next) {
     try {
         //take registration number from the client side
         let addedPlate = req.body.textBox
-        await registrationInstance.addRegistration(addedPlate);
-        res.redirect('/');
+        let something = await registrationInstance.addRegistration(addedPlate);
+        res.render('home', {
+            something
+        });
     } catch (error) {
         next(error);
     } finally {

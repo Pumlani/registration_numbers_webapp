@@ -4,22 +4,25 @@
     </div>
     <div class="row">
         <div class="alert">
+            {{#if something}}
+            <h1>{{something}}</h1>
+            {{/if}}
         </div>
     </div>
     <div class="row">
         <form action="/addPlate" method="POST">
 
-            <div class="col-md-4">
+            <div class="col-md-12">
                 <div class="input-group  mb-3">
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="inputGroup-sizing-lg">REGISTRATION</span>
                     </div>
                     <br><br>
-                    <input type="text" class="form-control registrType" name="textBox" placeholder="Enter a valid registration"
-                        aria-label="Large" aria-describedby="inputGroup-sizing-sm">
+                    <input type="text" class="form-control registrType" pattern="/[A-Z]{2}\s\d{3}\W\d{3}|[A-Z]{2}\s\d{3}\W\d{3}"
+                        name="textBox" placeholder="Enter a valid registration" aria-label="Large" aria-describedby="inputGroup-sizing-sm">
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-12">
                 <button class="btn btn-primary add-btn" type="submit"><strong>Add</strong></button>
             </div>
         </form>
@@ -27,16 +30,12 @@
 
     {{!-- Second form --}}
     <form action="/clear" method="POST">
-        <div class="col-md-6">
+        <div class="col-md-12">
             <button class="btn btn-primary resetBtn" type="submit"><strong>Reset</strong></button>
         </div>
-
     </form>
-
-
-
     <div class="row">
-        <div class "col-md-4 fourRadios">
+        <div class "col-md-12 fourRadios">
             <select class="custom-select mr-sm-2 town-dropdown" id='dropDown' name="plate" onclick="myTowns()">
                 <option value="ALL">ALL</option>
                 {{#each allTowns}}
@@ -48,12 +47,10 @@
 
     <div class="row">
         <div class="col-md-12">
-            <ul class="display-area col-md-2">
-                <!-- regList displays here -->
-                {{#each filredReg}}
-                <h2><span>{{this.registration}}</span></h2>
-                {{/each}}
-            </ul>
+            <!-- regList displays here -->
+            {{#each filredReg}}
+            <h2><span id="display">{{this.registration}}</span></h2>
+            {{/each}}
         </div>
     </div>
     <div class="row">
