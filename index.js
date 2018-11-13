@@ -71,7 +71,7 @@ app.post('/addPlate', async function (req, res, next) {
         let validation = await registrationInstance.doesExist(addedPlate);
         if (validation !== 0) {
 
-            req.flash('info', 'please enter a valid registration');
+            req.flash('info', 'The registration already exist!');
         } else {
             let plateAdded = await registrationInstance.addRegistration(addedPlate);
             let allTowns = await registrationInstance.allTowns();

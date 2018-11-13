@@ -4,7 +4,9 @@ ul {
 
 .error {
   text-align: center;
-  background-color: red;
+  color: red;
+  -moz-text-size-adjust: initial;
+  text-justify: auto;
 }
 
 .row {
