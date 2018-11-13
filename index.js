@@ -52,7 +52,7 @@ app.get('/', async function (req, res, next) {
         let allTowns = await registrationInstance.eachTowns();
         console.log(allTowns);
         res.render('home', {
-            allReg,
+            regNumbers: allReg,
             allTowns
         });
     } catch (error) {
@@ -63,22 +63,20 @@ app.get('/', async function (req, res, next) {
 });
 
 //post route
-app.post('/clear', async function (req, res, next) {
-    try {
-        await registrationInstance.clearRegistration();
-        res.redirect('/');
-    } catch (error) {
-        next(error);
-    }
-});
 app.post('/addPlate', async function (req, res, next) {
     try {
         //take registration number from the client side
         let addedPlate = req.body.textBox
-        let something = await registrationInstance.addRegistration(addedPlate);
-        res.render('home', {
-            something
-        });
+        console.log(addedPlate);
+        let validation = await registrationInstance.doesExist(addedPlate);
+        if (validation !== 0) {
+
+            req.flash('info', 'please enter a valid registration');
+        } else {
+            let plateAdded = await registrationInstance.addRegistration(addedPlate);
+            let allTowns = await registrationInstance.allTowns();
+        }
+        res.redirect("/");
     } catch (error) {
         next(error);
     } finally {
@@ -92,7 +90,7 @@ app.get('/filters/:towns', async function (req, res, next) {
         let filredReg = await registrationInstance.filterBy(tags);
         let allTowns = await registrationInstance.eachTowns();
         res.render('home', {
-            filredReg,
+            regNumbers: filredReg,
             allTowns
         });
 
@@ -100,6 +98,14 @@ app.get('/filters/:towns', async function (req, res, next) {
         next(error);
     } finally {
         console.log('finally');
+    }
+});
+app.post('/clear', async function (req, res, next) {
+    try {
+        await registrationInstance.clearRegistration();
+        res.redirect('/');
+    } catch (error) {
+        next(error);
     }
 });
 
