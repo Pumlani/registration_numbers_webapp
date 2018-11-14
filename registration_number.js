@@ -19,7 +19,7 @@ module.exports = function (pool) {
   }
   async function allTowns() {
     let result = await pool.query('SELECT registration FROM registration_numbers')
-    console.log('lapha', result.rows)
+    // console.log('lapha', result.rows)
     return result.rows
   }
   async function eachTowns() {
