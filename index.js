@@ -69,8 +69,9 @@ app.post('/addPlate', async function (req, res, next) {
         let addedPlate = req.body.textBox
         console.log(addedPlate);
         let validation = await registrationInstance.doesExist(addedPlate);
-        if (validation !== 0) {
-
+        if (addedPlate === '') {
+            req.flash('info', 'Please enter a valid registration!');
+        } else if (validation !== 0) {
             req.flash('info', 'The registration already exist!');
         } else {
             let plateAdded = await registrationInstance.addRegistration(addedPlate);
@@ -89,6 +90,16 @@ app.get('/filters/:towns', async function (req, res, next) {
         let tags = req.params.towns
         let filredReg = await registrationInstance.filterBy(tags);
         let allTowns = await registrationInstance.eachTowns();
+
+        allTowns = allTowns.map(reg => {
+            if (reg.tag === tags) {
+                reg.selected = "selected";
+            }
+            return reg;
+        });
+
+        console.log(allTowns);
+
         res.render('home', {
             regNumbers: filredReg,
             allTowns

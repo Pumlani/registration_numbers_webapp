@@ -23,7 +23,8 @@
                     </div>
                     <br><br>
                     <input type="text" class="form-control registrType" pattern="/[A-Z]{2}\s\d{3}\W\d{3}|[A-Z]{2}\s\d{3}\W\d{3}"
-                        name="textBox" placeholder="e.g. CA 123-1235" aria-label="Large" aria-describedby="inputGroup-sizing-sm">
+                        name="textBox" placeholder="e.g. CA 123-1235" aria-label="Large" aria-describedby="inputGroup-sizing-sm"
+                        onkeyup="this.value = this.value.toUpperCase();">
                     {{!-- <button class="btn btn-primary add-btn" type="submit"><strong>Add</strong></button> --}}
                 </div>
             </div>
@@ -44,7 +45,7 @@
             <select class="custom-select mr-sm-2 town-dropdown" id='dropDown' name="plate" onclick="myTowns()">
                 <option value="ALL">ALL</option>
                 {{#each allTowns}}
-                <option value="{{tag}}">{{town}}</option>
+                <option value="{{tag}}" {{selected}}>{{town}}</option>
                 {{/each}}
             </select>
         </div>
@@ -54,7 +55,7 @@
         <div class="col-md-12">
             <!-- regList displays here -->
             {{#each regNumbers}}
-            <h2><span class="display">{{this.registration}}</span></h2>
+            <span class="display">{{this.registration}}</span>
             {{/each}}
         </div>
     </div>

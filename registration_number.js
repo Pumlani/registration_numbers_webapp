@@ -2,37 +2,21 @@ module.exports = function (pool) {
   'use strict'
   async function addRegistration(reg) {
     let registNo = reg.substr(0, 3).trim();
-    // console.log(registNo)
-    // let exist = await doesExist(reg)
-    // if (!exist) {
-    //   let message = validate(reg)
-    //   if (!message) {
-    //     return message
-    //   } else {
     let plateResult = await pool.query('SELECT id FROM towns WHERE tag=$1', [registNo]);
     let plate = await pool.query('SELECT * FROM registration_numbers WHERE registration=$1', [registNo]);
     if (plate.rowCount === 0) {
       let result = await pool.query('insert into registration_numbers (registration, town_id) values ($1,$2)', [reg, plateResult.rows[0].id])
     }
-    //   }
-
-    // } else {
-    //   return 'does exist'
-    // }
   }
-
   async function doesExist(reg) {
-    // reg = reg.toUpperCase();
     let result = await pool.query('select registration from registration_numbers where registration=$1', [reg]);
     return result.rowCount;
   }
-
   async function validate(plate) {
     if (plate.length >= 8) {
       return "too long"
     }
   }
-
   async function allTowns() {
     let result = await pool.query('SELECT registration FROM registration_numbers')
     console.log('lapha', result.rows)

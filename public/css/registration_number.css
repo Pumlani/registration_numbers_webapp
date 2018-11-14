@@ -1,11 +1,12 @@
-ul {
-  list-style: none;
+.container {
+  margin-left: 20%;
+  margin-right: 20px;
+  padding: 10px;
 }
 
 .error {
   text-align: center;
   color: red;
-  -moz-text-size-adjust: initial;
   text-justify: auto;
 }
 
@@ -17,12 +18,9 @@ ul {
   text-align: center;
   background-color: yellow;
   border: black 1px solid;
-  border-radius: 6px;
-  display: inline-block;
-}
-
-.alert {
-  display: none;
+  border-radius: 5px;
+  width: 30px;
+  height: 20px;
 }
 
 .registrType {
