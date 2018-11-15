@@ -14,4 +14,4 @@ before_script:
 addons:
     apt:
     packages:
-  - postgresql-server-dev-9.2
+    - postgresql-server-dev-9.2

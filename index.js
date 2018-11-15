@@ -70,7 +70,7 @@ app.post('/addPlate', async function (req, res, next) {
         console.log(addedPlate);
         let validation = await registrationInstance.doesExist(addedPlate);
         if (addedPlate === '') {
-            req.flash('info', 'Please enter a valid registration!');
+            req.flash('info', 'Invalid, please try this format CA 000-111!');
         } else if (validation !== 0) {
             req.flash('info', 'The registration already exist!');
         } else {
