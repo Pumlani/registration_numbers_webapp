@@ -15,12 +15,16 @@
 }
 
 .display {
-  text-align: center;
+  border: 0.1em solid black;
+  width: 8em;
+  border-radius: 6px;
   background-color: yellow;
-  border: black 1px solid;
-  border-radius: 5px;
-  width: 30px;
-  height: 20px;
+  text-align: center;
+  height: 2.7em;
+  padding: 0.5em;
+  margin: 0.5em;
+  font-weight: bold;
+  color: #333;
 }
 
 .registrType {
